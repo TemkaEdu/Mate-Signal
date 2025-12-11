@@ -1,12 +1,14 @@
 package me.shiny.matesignal;
 
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.client.ConfigScreenHandler;
-import net.minecraftforge.event.TickEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.tick.ClientTickEvent;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CraftingScreen;
@@ -57,14 +59,13 @@ public class MateSignal {
     private long lastCraftMsgAt = 0L;
     private final Random rng = new Random();
 
-    public MateSignal() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
-        ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
-                () -> new ConfigScreenHandler.ConfigScreenFactory((mc, parent) -> new MateSignalConfigScreen(parent)));
-        TickEvent.ClientTickEvent.Post.BUS.addListener(this::onClientTick);
+    public MateSignal(IEventBus modEventBus, ModContainer modContainer) {
+        modContainer.registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
+        modContainer.registerExtensionPoint(IConfigScreenFactory.class, (mc, parent) -> new MateSignalConfigScreen(parent));
+        NeoForge.EVENT_BUS.addListener(this::onClientTick);
     }
 
-    private void onClientTick(TickEvent.ClientTickEvent.Post e) {
+    private void onClientTick(ClientTickEvent.Post e) {
         Minecraft mc = Minecraft.getInstance();
         Player p = mc.player;
         Level level = mc.level;
@@ -159,7 +160,7 @@ public class MateSignal {
             double d2 = en.distanceToSqr(p);
             if (d2 > r2) continue;
 
-            ResourceLocation rid = ForgeRegistries.ENTITY_TYPES.getKey(type);
+            ResourceLocation rid = BuiltInRegistries.ENTITY_TYPE.getKey(type);
             if (rid == null) continue;
             String typeId = rid.toString();
             String name = rid.getPath();
