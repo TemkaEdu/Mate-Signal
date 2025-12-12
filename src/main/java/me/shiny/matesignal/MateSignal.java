@@ -6,7 +6,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.tick.ClientTickEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.client.Minecraft;
