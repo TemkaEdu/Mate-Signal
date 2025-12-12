@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.*;
 
@@ -120,10 +120,10 @@ public class MateSignalConfigScreen extends Screen {
         addRenderableWidget(showUnactiveBtn);
         addRenderableWidget(backBtn);
 
-        List<EntityType<?>> all = new ArrayList<>(ForgeRegistries.ENTITY_TYPES.getValues());
+        List<EntityType<?>> all = new ArrayList<>(BuiltInRegistries.ENTITY_TYPE.stream().toList());
         all.removeIf(t -> t.getCategory() != MobCategory.MONSTER);
         all.sort(Comparator.comparing(t -> {
-            ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(t);
+            ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(t);
             return id == null ? "" : id.toString();
         }));
 
@@ -132,7 +132,7 @@ public class MateSignalConfigScreen extends Screen {
         if (cfg != null) for (String s : cfg) if (s != null && !s.isBlank()) enabled.add(s.toLowerCase(Locale.ROOT));
 
         for (EntityType<?> t : all) {
-            ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(t);
+            ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(t);
             if (id == null) continue;
             String full = id.toString();
             String name = id.getPath();
